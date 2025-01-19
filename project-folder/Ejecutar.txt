@@ -8,3 +8,7 @@ npm install express axios dotenv
 ****INICIAR EL SERVIDOR ****
 
 node server.js
+
+****CREDENCIALES****
+Usuario: test
+Contraseña: /1,52HW+s.jg
