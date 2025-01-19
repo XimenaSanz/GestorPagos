@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagos Referenciados</title>
-    <!--<link rel="stylesheet" href="/public/style.css"> -->
+    <title>Transferencia Bancaria</title>
     <style>
-        
-        /* Estilos básicos para la página */
+        /* Estilo general para el cuerpo de la página */
         body{
             background-color: #f4f4f9;
             font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,65 +30,36 @@
             color: #003366;
         }
 
-        /* Estilos para los formularios */
-        #login-form,
-        #payment-section {
-            background: #ffffff;
-            border-radius: 8px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Estilo para el contenedor principal */
+        .container {
             margin: 3rem auto;
-            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
             padding: 20px;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
 
-        #login-form{
-            max-width: 350px;
+        /* Clase para ocultar elementos */
+        .hidden {
+            display: none;
         }
 
-        #payment-section{
-            max-width: 400px;
-        }
-
-        /* Estilo para los campos de texto */
-        input {
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 16px;
+        /* Estilo para entradas de texto y botones */
+        input{
+            background-color: #f5f8fa;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin-bottom: 15px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            /*margin-top: 10px; */
             border: 1px solid #cbd6e2;
             border-radius: 12px;
-            background-color: #f5f8fa;
-        }
-
-        /* Estilo de formularios */
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* Estilo de tablas */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        table, th, td {
-            border: 1px solid #ccc;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
+            font-size: 16px;
         }
 
         /* Estilo para los botones */
@@ -108,6 +77,7 @@
         .btn-login{
             background-color: #007bff;
         }
+
         .btn-login:hover{
             background-color: #0056b3;
             font-size: 17px;
@@ -122,6 +92,15 @@
             font-size: 17px;
         }
 
+        .btn-undo{
+            background-color: red;
+        }
+
+        .btn-undo:hover{
+            background-color: rgb(203, 3, 3);
+            font-size: 17px;
+        }
+
         .btn-exit{
             background-color: #6c757d;
         }
@@ -131,24 +110,18 @@
             font-size: 17px;
         }
 
-                /*Mensajes*/
-                #error-message{
-                    background-color: #ffe0e0;
-                    border: 1px solid #cc0000;
-                    border-radius: 3px;
-                    color: #660000;
-                    display: none;
-                    font-size: 16px;
-                    margin-top: 10px;
-                    padding: 10px;
-                }
+        /*Mensajes*/
+        #error-message{
+            background-color: #ffe0e0;
+            border: 1px solid #cc0000;
+            border-radius: 3px;
+            color: #660000;
+            display: none;
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 10px;
+        }
 
-                #pago-message {
-                    border-radius: 3px;
-                    color: green;
-                    display: none;
-                    font-size: 16px;
-                }
     </style>
 </head>
 <body>
@@ -156,95 +129,113 @@
         <h1>Pagos Referenciados</h1>
     </header>
 
-    <!-- Sección de login -->
-    <div id="login-form">
-        <h2>Iniciar sesión</h2>
-        <!-- Campo para el nombre de usuario -->
-        <input type="text" id="username" placeholder="Usuario" required>
+    <!-- Sección de inicio de sesión -->
+    <div class="container" id="login-section">
+        <h2>Iniciar Sesión</h2>
+        <!-- Campo para el usuario -->
+        <input type="text" id="username" placeholder="Usuario">
         <!-- Campo para la contraseña -->
-        <input type="password" id="password" placeholder="Contraseña" required>
-       <!-- Botón para enviar el formulario -->
-        <button onclick="login()" class="btn-login">Iniciar sesión</button>
+        <input type="password" id="password" placeholder="Contraseña">
+        <!-- Botón para enviar los datos del login -->
+        <button onclick="login()" class="btn-login">Ingresar</button>
         <!-- Mensaje de error en caso de que las credenciales sean incorrectas -->
         <p id="error-message">Usuario o contraseña incorrectos</p>
     </div>
 
-    <!-- Sección de pagos referenciados -->
-    <div id="payment-section" style="display:none;">
-        <h2>Realizar Pago</h2>
-        <form id="paymentForm" onsubmit="return realizarPago(event)">
-            <input type="text" id="referencia" placeholder="ID de Referencia" required>
-            <input type="number" id="monto" placeholder="Monto" required>
-            <input type="text" id="description" placeholder="Descripción" required>
-            <input type="date" id="dueDate" required>
-            <button type="submit" class="btn-pay">Finalizar Pago</button>
-        </form>
-        <p id="pago-message" style="display:none; color: green;">Pago realizado exitosamente</p>
-        <button onclick="cancelarPago()" class="btn-exit">Salir</button>
+    <!-- Sección para realizar transferencia -->
+    <div class="container hidden" id="transfer-section">
+        <h2>Realizar Transferencia</h2>
+        <!-- Campo para el monto de la transferencia -->
+        <input type="number" id="amount" placeholder="Monto" min="0">
+        <!-- Campo para la cuenta destinataria -->
+        <input type="text" id="account" placeholder="Destinatario">
+        <input type="text" id="description" placeholder="Descripción" required>
+        <!-- Botones para finalizar, cancelar o salir -->
+        <button onclick="finalizePayment()" class="btn-pay">Finalizar</button>
+        <button onclick="cancelPayment()" class="btn-undo">Cancelar</button>
+        <button onclick="logout()" class="btn-exit">Salir</button>
+    </div>
+
+    <!-- Sección para mostrar el comprobante de transferencia -->
+    <div class="container hidden" id="ticket-section">
+        <h2>Comprobante de Transferencia</h2>
+        <!-- Aquí se mostrará el ticket generado -->
+        <p id="ticket"></p>
+        <!-- Botón para reiniciar la aplicación -->
+        <button onclick="resetApp()" class="btn-exit">Salir</button>
     </div>
 
     <script>
-        // Credenciales proporcionadas
+        // Credenciales correctas para el inicio de sesión
         const correctUsername = "test";
         const correctPassword = "/1,52HW+s.jg";
 
-        /**
-         * Función que valida el login de usuario y contraseña.
-         * Si las credenciales son correctas, muestra la sección de pagos referenciados.
-         */
-
+        // Función para manejar el inicio de sesión
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
+            // Verifica si las credenciales son correctas
             if (username === correctUsername && password === correctPassword) {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('payment-section').style.display = 'block';
+                document.getElementById('login-section').classList.add('hidden'); // Oculta la sección de login
+                document.getElementById('transfer-section').classList.remove('hidden'); // Muestra la sección de transferencia
             } else {
-                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('error-message').style.display = 'block'; // Muestra un mensaje de error
             }
         }
 
-        async function realizarPago(event) {
-            event.preventDefault();
+        // Función para finalizar el pago y generar el ticket
+        function finalizePayment() {
+            const amount = document.getElementById('amount').value; // Obtiene el monto
+            const account = document.getElementById('account').value; // Obtiene la cuenta destinataria
 
-            const referencia = document.getElementById('referencia').value;
-            const monto = document.getElementById('monto').value;
-            const descripcion = document.getElementById('description').value;
-            const dueDate = document.getElementById('dueDate').value;
+            // Verifica que ambos campos estén completos
+            if (amount && account) {
+                const ticket = document.getElementById('ticket'); // Selecciona el elemento para mostrar el ticket
+                const now = new Date(); // Obtiene la fecha y hora actuales
+                const folio = Math.random().toString(36).substr(2, 9).toUpperCase(); // Genera un folio único
 
-            try {
-                const response = await fetch('/api/payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ referencia, monto, descripcion, dueDate }),
-                });
+                // Genera el contenido del ticket
+                ticket.innerHTML = `
+                    <strong>Folio:</strong> ${folio}<br>
+                    <strong>Monto:</strong> $${amount}<br>
+                    <strong>Fecha:</strong> ${now.toLocaleDateString()}<br>
+                    <strong>Hora:</strong> ${now.toLocaleTimeString()}
+                `;
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    document.getElementById('pago-message').innerText = 'Pago realizado exitosamente';
-                    document.getElementById('pago-message').style.display = 'block';
-                } else {
-                    alert(`Error: ${data.message}`);
-                }
-            } catch (error) {
-                console.error('Error al realizar el pago:', error);
-                alert('Error al realizar el pago.');
+                document.getElementById('transfer-section').classList.add('hidden'); // Oculta la sección de transferencia
+                document.getElementById('ticket-section').classList.remove('hidden'); // Muestra la sección del ticket
+            } else {
+                alert('Por favor completa todos los campos'); // Muestra un mensaje de advertencia
             }
         }
 
-        /**
-         * Función para cancelar el proceso de pago.
-         * Retorna a la pantalla de inicio de sesión.
-         */
-        function cancelarPago() {
-            document.getElementById('payment-section').style.display = 'none';
-            document.getElementById('login-form').style.display = 'block';
+        // Función para cancelar el pago
+        function cancelPayment() {
+            document.getElementById('amount').value = ''; // Limpia el campo del monto
+            document.getElementById('account').value = ''; // Limpia el campo de la cuenta destinataria
+            alert('Operación cancelada'); // Muestra un mensaje de cancelación
+        }
+
+        // Función para cerrar sesión y volver al login
+        function logout() {
+            document.getElementById('amount').value = ''; // Limpia el campo del monto
+            document.getElementById('account').value = ''; // Limpia el campo de la cuenta destinataria
+            document.getElementById('transfer-section').classList.add('hidden'); // Oculta la sección de transferencia
+            document.getElementById('login-section').classList.remove('hidden'); // Muestra la sección de login
+        }
+
+        // Función para reiniciar la aplicación
+        function resetApp() {
+            document.getElementById('amount').value = ''; // Limpia el campo del monto
+            document.getElementById('account').value = ''; // Limpia el campo de la cuenta destinataria
+            document.getElementById('ticket').innerHTML = ''; // Limpia el contenido del ticket
+
+            document.getElementById('ticket-section').classList.add('hidden'); // Oculta la sección del ticket
+            document.getElementById('login-section').classList.remove('hidden'); // Muestra la sección de login
         }
     </script>
+
 </body>
 </html>
 
