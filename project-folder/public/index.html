@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagos Referenciados</title>
+    <!--<link rel="stylesheet" href="/public/style.css"> -->
+    <style>
+        
+        /* Estilos básicos para la página */
+        body{
+            background-color: #f4f4f9;
+            font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        header{
+            background-color: #003366; /* #3b4ab8 */
+            color: white;
+            padding: 1rem;
+        }
+
+        h1, h2{
+            text-align: center;
+        }
+
+        h2{
+            color: #003366;
+        }
+
+        /* Estilos para los formularios */
+        #login-form,
+        #payment-section {
+            background: #ffffff;
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 3rem auto;
+            overflow: hidden;
+            padding: 20px;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #login-form{
+            max-width: 350px;
+        }
+
+        #payment-section{
+            max-width: 400px;
+        }
+
+        /* Estilo para los campos de texto */
+        input {
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            border: 1px solid #cbd6e2;
+            border-radius: 12px;
+            background-color: #f5f8fa;
+        }
+
+        /* Estilo de formularios */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Estilo de tablas */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        /* Estilo para los botones */
+        button {
+            width: 100%;
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+
+        .btn-login{
+            background-color: #007bff;
+        }
+        .btn-login:hover{
+            background-color: #0056b3;
+            font-size: 17px;
+        }
+
+        .btn-pay{
+            background-color: #28a745;
+        }
+
+        .btn-pay:hover{
+            background-color: #218838;
+            font-size: 17px;
+        }
+
+        .btn-exit{
+            background-color: #6c757d;
+        }
+
+        .btn-exit:hover{
+            background-color: #5a6268;
+            font-size: 17px;
+        }
+
+                /*Mensajes*/
+                #error-message{
+                    background-color: #ffe0e0;
+                    border: 1px solid #cc0000;
+                    border-radius: 3px;
+                    color: #660000;
+                    display: none;
+                    font-size: 16px;
+                    margin-top: 10px;
+                    padding: 10px;
+                }
+
+                #pago-message {
+                    border-radius: 3px;
+                    color: green;
+                    display: none;
+                    font-size: 16px;
+                }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pagos Referenciados</h1>
+    </header>
+
+    <!-- Sección de login -->
+    <div id="login-form">
+        <h2>Iniciar sesión</h2>
+        <!-- Campo para el nombre de usuario -->
+        <input type="text" id="username" placeholder="Usuario" required>
+        <!-- Campo para la contraseña -->
+        <input type="password" id="password" placeholder="Contraseña" required>
+       <!-- Botón para enviar el formulario -->
+        <button onclick="login()" class="btn-login">Iniciar sesión</button>
+        <!-- Mensaje de error en caso de que las credenciales sean incorrectas -->
+        <p id="error-message">Usuario o contraseña incorrectos</p>
+    </div>
+
+    <!-- Sección de pagos referenciados -->
+    <div id="payment-section" style="display:none;">
+        <h2>Realizar Pago</h2>
+        <form id="paymentForm" onsubmit="return realizarPago(event)">
+            <input type="text" id="referencia" placeholder="ID de Referencia" required>
+            <input type="number" id="monto" placeholder="Monto" required>
+            <input type="text" id="description" placeholder="Descripción" required>
+            <input type="date" id="dueDate" required>
+            <button type="submit" class="btn-pay">Finalizar Pago</button>
+        </form>
+        <p id="pago-message" style="display:none; color: green;">Pago realizado exitosamente</p>
+        <button onclick="cancelarPago()" class="btn-exit">Salir</button>
+    </div>
+
+    <script>
+        // Credenciales proporcionadas
+        const correctUsername = "test";
+        const correctPassword = "/1,52HW+s.jg";
+
+        /**
+         * Función que valida el login de usuario y contraseña.
+         * Si las credenciales son correctas, muestra la sección de pagos referenciados.
+         */
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === correctUsername && password === correctPassword) {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('payment-section').style.display = 'block';
+            } else {
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+
+        async function realizarPago(event) {
+            event.preventDefault();
+
+            const referencia = document.getElementById('referencia').value;
+            const monto = document.getElementById('monto').value;
+            const descripcion = document.getElementById('description').value;
+            const dueDate = document.getElementById('dueDate').value;
+
+            try {
+                const response = await fetch('/api/payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ referencia, monto, descripcion, dueDate }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('pago-message').innerText = 'Pago realizado exitosamente';
+                    document.getElementById('pago-message').style.display = 'block';
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Error al realizar el pago:', error);
+                alert('Error al realizar el pago.');
+            }
+        }
+
+        /**
+         * Función para cancelar el proceso de pago.
+         * Retorna a la pantalla de inicio de sesión.
+         */
+        function cancelarPago() {
+            document.getElementById('payment-section').style.display = 'none';
+            document.getElementById('login-form').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
