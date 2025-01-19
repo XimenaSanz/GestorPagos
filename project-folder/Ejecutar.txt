@@ -1,0 +1,10 @@
+
+
+npm init -y
+
+npm install express axios dotenv
+
+
+****INICIAR EL SERVIDOR ****
+
+node server.js
