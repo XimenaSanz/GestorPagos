@@ -12,3 +12,26 @@ node server.js
 ****CREDENCIALES****
 Usuario: test
 Contraseña: /1,52HW+s.jg
+
+
+
+graph TD;
+    A[Inicio] --> B[Inicio de Sesión];
+    B --> C{Verificar Credenciales};
+    C -->|Correctas| D[Mostrar Sección de Transferencia];
+    C -->|Incorrectas| E[Mostrar Mensaje de Error];
+    D --> F[Ingresar Detalles de Transferencia];
+    F --> G{Validar Campos};
+    G -->|Completos| H[Generar Ticket];
+    G -->|Incompletos| I[Mostrar Alerta];
+    H --> J[Mostrar Sección de Ticket];
+    F --> K[Cancelar Transferencia];
+    K --> L[Limpiar Campos];
+    K --> M[Mostrar Mensaje de Cancelación];
+    I --> N[Intentar Nuevamente];
+    D --> O[Cerrar Sesión];
+    O --> P[Limpiar Campos y Mostrar Inicio de Sesión];
+    J --> Q[Descargar Comprobante];
+    Q --> R[Generar Archivo y Descargar];
+    J --> S[Reiniciar Aplicación];
+    S --> T[Limpiar Campos y Mostrar Inicio de Sesión];
